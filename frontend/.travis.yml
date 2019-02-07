@@ -1,0 +1,22 @@
+sudo: required
+services:
+  - docker
+
+before_install:
+  - docker build -t pheely/docker-react -f Dockerfile.dev .
+
+script:
+  - docker run pheely/docker-react npm run test -- --coverage 
+
+deploy:
+  provider: elasticbeanstalk
+  region: "us-west-2"
+  app: "docker"
+  env: "Docker_env"
+  bucket_name: "elasticbeanstalk-us-west-2-306476627547"
+  bucket_path: "docker"
+  on:
+    branch: master
+  access_key_id: $AWS_ACCESS_KY
+  secret_access_key:
+    secure: "$AWS_SECRET_KEY"  
